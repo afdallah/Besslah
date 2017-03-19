@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
+    plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
     prefixer = require('gulp-autoprefixer'),
     minify = require('gulp-cssnano'),
     uglify = require('gulp-uglify'),
@@ -9,6 +11,7 @@ var gulp = require('gulp'),
     useref = require('gulp-useref'),
     uncss = require('gulp-uncss'),
     surge = require('gulp-surge'),
+    notify = require('gulp-notify'),
 
     // Path
     sassPath = 'app/scss/**/*.scss',
@@ -18,10 +21,25 @@ var gulp = require('gulp'),
 
 // Sass task
 gulp.task('sass', function() {
+  var onError = function(err) {
+    notify.onError({
+      title:    "Ada masalah boss!",
+      subtitle: "You prat! What've you done now?!",
+      message:  "Error: <%= error.message %>",
+      sound:    true
+    })(err);
+    this.emit('end');
+  };
+
   return gulp.src(sassPath)
+  .pipe(plumber({errorHandler: onError}))
+  .pipe(sourcemaps.init())
   .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
   .pipe(prefixer('last 10 version'))
+  .pipe(sourcemaps.write('', {addComment: false}))
+  .pipe(plumber.stop())
   .pipe(gulp.dest('app/assets/css/'))
+  .pipe( notify( { message: 'TASK: "SASS" Completed!\n No error found.', onLast: true }))
   .pipe(browserSync.stream());
 });
 
@@ -29,7 +47,7 @@ gulp.task('sass', function() {
 gulp.task('serve', ['sass'], function() {
   browserSync.init({
     server: {
-      baseDir: './app'
+      baseDir: './app',
     },
   });
 
@@ -37,6 +55,13 @@ gulp.task('serve', ['sass'], function() {
   gulp.watch(sassPath, ['sass']);
   gulp.watch(htmlPath).on('change', reload);
   gulp.watch(jsPath).on('change', reload);
+});
+
+// Move image to dist
+gulp.task('image', function() {
+  return gulp.src('app/assets/img/**/*{.png,.jpg,.jpeg}')
+  .pipe(gulp.dest('dist/assets/img'))
+  .pipe( notify( { message: 'TASK: "IMAGE" Completed!\n No error found.', onLast: true }))
 });
 
 // Build task
@@ -52,19 +77,15 @@ gulp.task('build', function() {
     },
   })))
   .pipe(gulpIf('*.js', uglify()))
-  .pipe(gulp.dest('dist'));
+  .pipe(gulp.dest('dist'))
+  .pipe( notify( { message: 'TASK: "BUILD" Completed!\n No error found.', onLast: true }))
 });
 
-// Move image to dist
-gulp.task('image', function() {
-  return gulp.src('app/assets/img/*')
-  .pipe(gulp.dest('dist/assets/img'));
-});
-
-// Deploy trought surge
-gulp.task('deploy', ['build'], function () {
+// Deploy trough surge
+gulp.task('deploy', ['build', 'image'], function () {
   return surge({
     project: './dist',         // Path to your static build directory
-    domain: 'redience.surge.sh'  // Your domain or Surge subdomain
-  });
+    domain: 'nusathemes.surge.sh'  // Your domain or Surge subdomain
+  })
+  .pipe( notify( { message: 'TASK: "DEPLOY" Completed!\n No error found.', onLast: true }))
 });
