@@ -36,7 +36,7 @@ gulp.task('sass', function() {
   .pipe(sourcemaps.init())
   .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
   .pipe(prefixer('last 10 version'))
-  .pipe(sourcemaps.write('', {addComment: false}))
+  .pipe(sourcemaps.write(''))
   .pipe(plumber.stop())
   .pipe(gulp.dest('app/assets/css/'))
   .pipe( notify( { message: 'TASK: "SASS" Completed!\n No error found.', onLast: true }))
@@ -87,5 +87,4 @@ gulp.task('deploy', ['build', 'image'], function () {
     project: './dist',         // Path to your static build directory
     domain: 'nusathemes.surge.sh'  // Your domain or Surge subdomain
   })
-  .pipe( notify( { message: 'TASK: "DEPLOY" Completed!\n No error found.', onLast: true }))
 });
