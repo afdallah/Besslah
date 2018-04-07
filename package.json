@@ -1,12 +1,22 @@
 {
-  "name": "Nusathemes",
+  "name": "besslah",
   "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
-  "dependencies": [],
+  "description": "Web starter kit for kids - Perfect configuration for your bootstrap and SASS workflow.",
+  "main": "gulpfile.babel.js",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.13.0",
-    "gulp": "^3.9.1",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-cssnano": "^2.1.2",
     "gulp-if": "^2.0.1",
@@ -23,6 +33,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Afdallah Wahyu Arafat",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/afdallah/besslah.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/afdallah/besslah/issues"
+  },
+  "homepage": "https://gitlab.com/afdallah/besslah#README"
 }
