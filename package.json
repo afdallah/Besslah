@@ -1,7 +1,7 @@
 {
   "name": "besslah",
   "version": "1.0.0",
-  "description": "Web starter kit for kids - Perfect configuration for your bootstrap and SASS workflow.",
+  "description": "✨ Besslah is just another way to say 'Just start now!' in javanese.",
   "main": "gulpfile.babel.js",
   "dependencies": {
     "bulma": "^0.6.2"
