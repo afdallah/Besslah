@@ -31,7 +31,7 @@ const project = {
   email: settings.email || '<admin@site.com>',
   sourceDir: settings.sourceDir || './source',
   buildDir: settings.buildDir || './build',
-  usePug: settings.usePug || true
+  usePug: settings.usePug || false
 }
 
 const paths = {
@@ -69,6 +69,7 @@ const { html, styles, scripts, images, build } = paths
 // Pug task: You can disable this if you dont want to use it
 gulp.task('html', function () {
   if (project.usePug) {
+    console.error('\x1b[32m', 'PUG is enabled, dir: ./pugs')
     return gulp.src(html.src)
       .pipe(pug({
         pretty: true
@@ -77,7 +78,7 @@ gulp.task('html', function () {
       .pipe(gulp.dest(html.dest))
   }
 
-  return true
+  console.error('\x1b[33m', 'PUG is disabled, go to settings')
 })
 
 // Styles task
@@ -95,7 +96,9 @@ gulp.task('styles', function () {
   return gulp.src(styles.src)
     .pipe(plumber({errorHandler: onError}))
     .pipe(sourcemaps.init())
-    .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+    .pipe(sass({
+      outputStyle: 'expanded'
+    }).on('error', sass.logError))
     .pipe(autoprefixer('last 2 version'))
     .pipe(sourcemaps.write(''))
     .pipe(plumber.stop())
@@ -134,7 +137,7 @@ gulp.task('scripts', function () {
 })
 
 // Serve task
-gulp.task('serve', ['scripts', 'styles'], function () {
+gulp.task('serve', ['html', 'scripts', 'styles'], function () {
   browserSync.init({
     logPrefix: 'BESS',
     port: 3000,
@@ -144,7 +147,7 @@ gulp.task('serve', ['scripts', 'styles'], function () {
   })
 
   // Files to watch
-  gulp.watch([html.src, html.dest], ['html', reload])
+  gulp.watch([html.src, `${html.dest}/*.html`], ['html', reload])
   gulp.watch([styles.src], ['styles', reload])
   gulp.watch([scripts.src], ['scripts', reload])
   gulp.watch([images.src], reload)

@@ -31,6 +31,203 @@ html(lang='')
     link(rel='stylesheet', href='./styles/style.css')
   body
     // Add your site or app content here
+    section.hero.is-medium.is-primary
+      .hero-body
+        .container
+          .columns
+            .column.is-8-desktop.is-offset-2-desktop
+              h1.title.is-2.is-spaced
+                | Hello Bulma!
+              h2.subtitle.is-4
+                | Congratulations! You're running the
+                strong Bulma start
+                |  project.
+                br
+                |                   It includes everything you need to
+                strong build your own website
+                |  with Bulma.
+    section.section
+      .container
+        .columns
+          .column.is-8-desktop.is-offset-2-desktop
+            .content
+              h3 What's included
+              p
+                | The
+                code npm
+                |  dependencies included in
+                code package.json
+                |  are:
+              ul
+                li
+                  code
+                    a(href="https://github.com/jgthms/bulma") bulma
+                li
+                  code
+                    a(href="https://github.com/sass/node-sass") node-sass
+                  |  to compile your own Sass file
+                li
+                  code
+                    a(href="https://github.com/postcss/postcss-cli") postcss-cli
+                  |  and
+                  code
+                    a(href="https://github.com/postcss/autoprefixer") autoprefixer
+                  |  to add support for older browsers
+                li
+                  code
+                    a(href="https://babeljs.io/docs/usage/cli/") babel-cli
+                  | ,
+                  code
+                    a(href="https://github.com/babel/babel-preset-env") babel-preset-env
+                  |                   and
+                  code
+                    a(href="https://github.com/jmcriffey/babel-preset-es2015-ie") babel-preset-es2015-ie
+                  |                   for compiling ES6 JavaScript files
+              p
+                | Apart from
+                code package.json
+                | , the following files are included:
+              ul
+                li
+                  code .babelrc
+                  |  configuration file for
+                  a(href="https://babeljs.io/") Babel
+                li
+                  code .gitignore
+                  |  common
+                  a(href="https://git-scm.com/") Git
+                  |  ignored files
+                li
+                  code index.html
+                  |  this HTML5 file
+                li
+                  code _sass/main.scss
+                  |  a basic SCSS file that
+                  strong imports Bulma
+                  |  and explains how to
+                  strong customize
+                  |  your styles, and compiles to
+                  code css/main.css
+                li
+                  code _javascript/main.js
+                  |  an ES6 JavaScript that compiles to
+                  code lib/main.js
+              h3 Try it out!
+              p
+                | To see if your setup works, follow these steps:
+              ol
+                li
+                  p
+                    strong Install
+                    |  all dependencies:
+                    br
+                    pre.
+
+                li
+                  p
+                    strong Start
+                    |  the CSS and JS watchers:
+                    br
+                    pre.
+
+                li
+                  p
+                    strong Edit
+                    code _sass/main.scss
+                    |  by adding the following rule at the
+                    strong end
+                    |  of the file:
+                    br
+                    pre.
+
+              p
+                | The page background should turn
+                strong.has-text-success green
+                | !
+              h3 Get started
+              p
+                | You're
+                strong ready
+                |  to create your own designs with Bulma. Just edit or duplicate this page, or simply create a new one!
+                br
+                |                 For example, this page is
+                strong only
+                |  built with the following
+                strong Bulma elements
+                | :
+            table.table.is-bordered.is-fullwidth
+              thead
+                tr
+                  th Type
+                  th CSS class
+              tbody
+                tr
+                  th Columns
+                  td
+                    code
+                      a(href="http://bulma.io/documentation/columns/basics") columns
+                    code
+                      a(href="http://bulma.io/documentation/columns/basics") column
+                tr
+                  th Layout
+                  td
+                    code
+                      a(href="http://bulma.io/documentation/layout/section") section
+                    code
+                      a(href="http://bulma.io/documentation/layout/container") container
+                    code
+                      a(href="http://bulma.io/documentation/layout/footer") footer
+                tr
+                  th Elements
+                  td
+                    code
+                      a(href="http://bulma.io/documentation/elements/button") button
+                    code
+                      a(href="http://bulma.io/documentation/elements/content") content
+                    code
+                      a(href="http://bulma.io/documentation/elements/title") title
+                    code
+                      a(href="http://bulma.io/documentation/elements/title") subtitle
+                tr
+                  th Form
+                  td
+                    code
+                      a(href="http://bulma.io/documentation/form/general") field
+                    code
+                      a(href="http://bulma.io/documentation/form/general") control
+                tr
+                  th Helpers
+                  td
+                    code
+                      a(href="http://bulma.io/documentation/modifiers/typography-helpers/") has-text-centered
+                    code
+                      a(href="http://bulma.io/documentation/modifiers/typography-helpers/") has-text-weight-semibold
+            .content
+              p
+                | If you want to
+                strong learn more
+                | , follow these links:
+            .field.is-grouped
+              p.control
+                a.button.is-medium.is-primary(href="http://bulma.io")
+                  strong.has-text-weight-semibold Bulma homepage
+              p.control
+                a.button.is-medium.is-link(href="http://bulma.io/documentation/overview/start/")
+                  strong.has-text-weight-semibold Documentation
+    footer.footer.has-text-centered
+      .container
+        .columns
+          .column.is-8-desktop.is-offset-2-desktop
+            p
+              strong.has-text-weight-semibold
+                a(href="https://www.npmjs.com/package/bulma-start") bulma-start@0.0.1
+            p
+              small
+                | Source code licensed
+                a(href="http://opensource.org/licenses/mit-license.php") MIT
+            p(style="margin-top: 1rem;")
+              a(href="http://bulma.io")
+                img(src="made-with-bulma.png" alt="Made with Bulma" width="128" height="24")
     // build:js scripts/bundle.min.js
     script(src='./scripts/bundle.js')
     // endbuild
