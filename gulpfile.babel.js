@@ -1,8 +1,9 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
+import pug from 'gulp-pug'
 import sass from 'gulp-sass'
 import sourcemaps from 'gulp-sourcemaps'
-import prefixer from 'gulp-autoprefixer'
+import autoprefixer from 'gulp-autoprefixer'
 import minify from 'gulp-cssnano'
 import uglify from 'gulp-uglify'
 import browserSync from 'browser-sync'
@@ -22,7 +23,7 @@ let imgPath = 'dist/assets/img'
 
 const settings = {
   html: {
-    src: ['./source/**/*.html', './source/**/*.pug'],
+    src: './source/pugs/**/*.pug',
     dest: './source'
   },
   styles: {
@@ -36,6 +37,16 @@ const settings = {
 }
 
 const { html, styles, scripts, build } = settings
+
+// Pug task
+gulp.task('html', function () {
+  return gulp.src('./source/pugs/**/*.pug')
+    .pipe(pug({
+      pretty: true
+    }))
+    // TODO: find a way to exclude parent directory
+    .pipe(gulp.dest(html.dest))
+})
 
 // Sass task
 gulp.task('styles', function () {
@@ -53,7 +64,7 @@ gulp.task('styles', function () {
     .pipe(plumber({errorHandler: onError}))
     .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-    .pipe(prefixer('last 10 version'))
+    .pipe(autoprefixer('last 10 version'))
     .pipe(sourcemaps.write(''))
     .pipe(plumber.stop())
     .pipe(gulp.dest(styles.dest))
