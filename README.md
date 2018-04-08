@@ -13,6 +13,32 @@
 9. Support es6/es2015 syntax via babel
 8. Deploy to surge.sh
 
+## Structures
+```bash
+.
+├── build
+│   ├── images
+│   ├── scripts
+│   ├── styles
+│   └── index.html
+├── source
+│   ├── images
+│   ├── pugs
+│   ├── scripts
+│   ├── scss
+│   ├── styles
+│   └── index.html
+├── gulpfile.babel.js
+├── package.json
+├── settings.js
+```
+
+## Quick Setup
+1. Clone this repo `git@github.com:afdallah/Besslah.git your-project-name`
+2. Or Download it manually
+2. Install all dependencies `npm i -g gulp && npm i`
+3. Update `settings.js` to match your preferences
+
 ## API
 1. `gulp styles` - compile sass, auto prefix css, sourcemaps
 2. `gulp html` - compile pug(Optional)
@@ -24,4 +50,4 @@
 8. `gulp` - run `gulp serve` task.
 
 
-Feel free to make a change. If you have any question, reach me on afdallah.war@gmail.com
+Feel free to make a change. If you have any question, reach me on afdallah.war@gmail.com ☕
