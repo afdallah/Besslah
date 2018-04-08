@@ -25,7 +25,7 @@ const { reload } = browserSync
 
 const project = {
   name: 'Besslah Front-end',
-  homepage: 'something.surge.sh', // this url will be used for deploying to surge.sh
+  homepage: 'mysuperawesomesite.surge.sh', // this url will be used for deploying to surge.sh
   version: pkg.version,
   license: pkg.license,
   author: pkg.author,
@@ -65,15 +65,6 @@ const paths = {
     dest: project.buildDir
   }
 }
-
-const placeholder = '/*\n' +
-    ' * <%= pkg.name %> <%= pkg.version %>\n' +
-    ' * <%= pkg.description %>\n' +
-    ' * <%= pkg.homepage %>\n' +
-    ' *\n' +
-    ' * Copyright 2015, <%= pkg.author %>\n' +
-    ' * Released under the <%= pkg.license %> license.\n' +
-    '*/\n\n'
 
 const { html, styles, scripts, images, build } = paths
 
@@ -140,7 +131,7 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest(scripts.dest))
 })
 
-// BrowserSync task
+// Serve task
 gulp.task('serve', ['scripts', 'styles'], function () {
   browserSync.init({
     logPrefix: 'BESS',
@@ -157,11 +148,13 @@ gulp.task('serve', ['scripts', 'styles'], function () {
   gulp.watch([images.src], reload)
 })
 
+// Copy all necessary files to build dir
 gulp.task('copy', function () {
   gulp.src(build.src, {base: project.sourceDir})
     .pipe(gulp.dest(build.dest))
 })
 
+// Clean directory
 gulp.task('clean', () => del([project.buildDir, '!.git', `!${project.buildDir}/.git`], {dot: true}))
 
 // Useref task : only used for build purpose
@@ -179,13 +172,18 @@ gulp.task('useref', function () {
 })
 
 // Build
-// gulp.task('build', ['html', 'styles', 'scripts', 'images', 'clean', 'copy', 'useref'])
 gulp.task('build', gulpSequence('html', 'styles', 'scripts', 'images', 'clean', 'copy', 'useref'))
 
 // Deploy trough surge
-gulp.task('deploy', ['build'], function () {
+gulp.task('surge', function () {
   return surge({
-    project: build.dest, // Path to your static build directory
+    project: project.buildDir, // Path to your static build directory
     domain: project.homepage // Your domain or Surge subdomain
   })
 })
+
+// Build and deploy
+gulp.task('deploy', gulpSequence('build', 'surge'))
+
+// Default task
+gulp.task('default', ['serve'])
