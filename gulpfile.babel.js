@@ -15,14 +15,31 @@ import notify from 'gulp-notify'
 const reload = browserSync.reload
 
 // Path
-var sassPath = 'app/scss/**/*.scss'
-var htmlPath = ['index.html', 'app/**/*.html']
-var jsPath = 'app/assets/js/**/*.js'
-var imgPath = 'dist/assets/img'
+let sassPath = 'app/scss/**/*.scss'
+let htmlPath = ['index.html', 'app/**/*.html']
+let jsPath = 'app/assets/js/**/*.js'
+let imgPath = 'dist/assets/img'
+
+const settings = {
+  html: {
+    src: ['./source/**/*.html', './source/**/*.pug'],
+    dest: './source'
+  },
+  styles: {
+    src: './source/scss/**/*.scss',
+    dest: './source/styles'
+  },
+  scripts: {
+    src: './source/scripts/**/*.js'
+  },
+  build: './build'
+}
+
+const { html, styles, scripts, build } = settings
 
 // Sass task
-gulp.task('sass', function () {
-  var onError = function (err) {
+gulp.task('styles', function () {
+  let onError = function (err) {
     notify.onError({
       title: 'Ada masalah boss!',
       subtitle: "You prat! What've you done now?!",
@@ -32,20 +49,20 @@ gulp.task('sass', function () {
     this.emit('end')
   }
 
-  return gulp.src(sassPath)
+  return gulp.src(styles.src)
     .pipe(plumber({errorHandler: onError}))
     .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(prefixer('last 10 version'))
     .pipe(sourcemaps.write(''))
     .pipe(plumber.stop())
-    .pipe(gulp.dest('app/assets/css/'))
-    .pipe(notify({ message: 'TASK: "SASS" Completed!\n No error found.', onLast: true }))
+    .pipe(gulp.dest(styles.dest))
+    .pipe(notify({ message: 'TASK: "Styles" Completed!\n No error found.', onLast: true }))
     .pipe(browserSync.stream())
 })
 
 // BrowserSync task
-gulp.task('serve', ['sass'], function () {
+gulp.task('serve', ['styles'], function () {
   browserSync.init({
     server: {
       baseDir: './app'
@@ -53,7 +70,7 @@ gulp.task('serve', ['sass'], function () {
   })
 
   // Files to watch
-  gulp.watch(sassPath, ['sass'])
+  gulp.watch(sassPath, ['styles'])
   gulp.watch(htmlPath).on('change', reload)
   gulp.watch(jsPath).on('change', reload)
 })
