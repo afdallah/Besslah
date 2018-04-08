@@ -17,10 +17,12 @@ import useref from 'gulp-useref'
 import uncss from 'gulp-uncss'
 import surge from 'gulp-surge'
 import notify from 'gulp-notify'
+import del from 'del'
+import gulpSequence from 'gulp-sequence'
 
 const { reload } = browserSync
 
-const settings = {
+const paths = {
   html: {
     src: './source/pugs/**/*.pug',
     dest: './source'
@@ -37,10 +39,20 @@ const settings = {
     src: './source/images/**/*{.png,.jpg,.jpeg,.svg,.gif}',
     dest: './build/images'
   },
-  build: './build'
+  build: {
+    src: [
+      './source/*.html',
+      './source/styles',
+      './source/scripts',
+      '!source/scripts/src',
+      '!source/**/*.map',
+      './source/images/*'
+    ],
+    dest: './build'
+  }
 }
 
-const { html, styles, scripts, images, build } = settings
+const { html, styles, scripts, images, build } = paths
 
 // Pug task: You can disable this if you dont want to use it
 gulp.task('html', function () {
@@ -107,38 +119,49 @@ gulp.task('scripts', function () {
 // BrowserSync task
 gulp.task('serve', ['scripts', 'styles'], function () {
   browserSync.init({
+    logPrefix: 'BESS',
+    port: 3000,
     server: {
       baseDir: './source'
     }
   })
 
   // Files to watch
-  gulp.watch(sassPath, ['styles'])
-  gulp.watch(htmlPath).on('change', reload)
-  gulp.watch(jsPath).on('change', reload)
+  gulp.watch([html.src, html.dest], ['html', reload])
+  gulp.watch([styles.src], ['styles', reload])
+  gulp.watch([scripts.src], ['scripts', reload])
+  gulp.watch([images.src], reload)
 })
 
-// Build task
-gulp.task('build', function () {
-  return gulp.src(htmlPath)
+gulp.task('copy', function () {
+  gulp.src(build.src, {base: './source'})
+    .pipe(gulp.dest(build.dest))
+})
+
+gulp.task('clean', () => del(['build', '!.git', '!build/.git'], {dot: true}))
+
+// Useref task : only used for build purpose
+gulp.task('useref', function () {
+  return gulp.src('./source/*.html')
     .pipe(useref())
-    .pipe(gulpIf('*.css', uncss({
-      html: htmlPath
-    })))
     .pipe(gulpIf('*.css', minify({
       discardComments: {
         removeAll: true
       }
     })))
     .pipe(gulpIf('*.js', uglify()))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('./build'))
     .pipe(notify({ message: 'TASK: "BUILD" Completed!\n No error found.', onLast: true }))
 })
 
+// Build
+// gulp.task('build', ['html', 'styles', 'scripts', 'images', 'clean', 'copy', 'useref'])
+gulp.task('build', gulpSequence('html', 'styles', 'scripts', 'images', 'clean', 'copy', 'useref'))
+
 // Deploy trough surge
-gulp.task('deploy', ['build', 'image'], function () {
+gulp.task('deploy', ['build'], function () {
   return surge({
-    project: './dist', // Path to your static build directory
+    project: './build', // Path to your static build directory
     domain: 'nusathemes.surge.sh' // Your domain or Surge subdomain
   })
 })

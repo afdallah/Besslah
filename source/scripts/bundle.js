@@ -5,5 +5,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 'use strict';
 
-console.log('hello again');
+console.log('hello Braaay!');
 //# sourceMappingURL=bundle.js.map
