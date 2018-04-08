@@ -6,6 +6,9 @@ import sourcemaps from 'gulp-sourcemaps'
 import autoprefixer from 'gulp-autoprefixer'
 import minify from 'gulp-cssnano'
 import uglify from 'gulp-uglify'
+import imagemin from 'gulp-imagemin'
+import imageminJpegRecompress from 'imagemin-jpeg-recompress'
+import imageminPngquant from 'imagemin-pngquant'
 import browserSync from 'browser-sync'
 import gulpIf from 'gulp-if'
 import useref from 'gulp-useref'
@@ -33,10 +36,14 @@ const settings = {
   scripts: {
     src: './source/scripts/**/*.js'
   },
+  images: {
+    src: './source/images/**/*{.png,.jpg,.jpeg,.svg,.gif}',
+    dest: './build/images'
+  },
   build: './build'
 }
 
-const { html, styles, scripts, build } = settings
+const { html, styles, scripts, images, build } = settings
 
 // Pug task
 gulp.task('html', function () {
@@ -87,10 +94,20 @@ gulp.task('serve', ['styles'], function () {
 })
 
 // Move image to dist
-gulp.task('image', function () {
-  return gulp.src('app/assets/img/**/*{.png,.jpg,.jpeg}')
-    .pipe(gulp.dest('dist/assets/img'))
-    .pipe(notify({ message: 'TASK: "IMAGE" Completed!\n No error found.', onLast: true }))
+gulp.task('images', function () {
+  return gulp.src(images.src)
+    .pipe(imagemin([
+      imagemin.gifsicle({interlaced: true}),
+      imageminJpegRecompress({
+        progressive: true,
+        max: 80,
+        min: 70
+      }),
+      imageminPngquant({quality: '75-85'}),
+      imagemin.svgo({plugins: [{removeViewBox: false}]})
+    ]))
+    .pipe(gulp.dest(images.dest))
+    .pipe(notify({ message: 'TASK: "IMAGES" Completed!\n No error found.', onLast: true }))
 })
 
 // Build task
