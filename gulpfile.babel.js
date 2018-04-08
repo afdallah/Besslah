@@ -6,6 +6,8 @@ import sourcemaps from 'gulp-sourcemaps'
 import autoprefixer from 'gulp-autoprefixer'
 import minify from 'gulp-cssnano'
 import uglify from 'gulp-uglify'
+import concat from 'gulp-concat'
+import babel from 'gulp-babel'
 import imagemin from 'gulp-imagemin'
 import imageminJpegRecompress from 'imagemin-jpeg-recompress'
 import imageminPngquant from 'imagemin-pngquant'
@@ -16,13 +18,7 @@ import uncss from 'gulp-uncss'
 import surge from 'gulp-surge'
 import notify from 'gulp-notify'
 
-const reload = browserSync.reload
-
-// Path
-let sassPath = 'app/scss/**/*.scss'
-let htmlPath = ['index.html', 'app/**/*.html']
-let jsPath = 'app/assets/js/**/*.js'
-let imgPath = 'dist/assets/img'
+const { reload } = browserSync
 
 const settings = {
   html: {
@@ -34,7 +30,8 @@ const settings = {
     dest: './source/styles'
   },
   scripts: {
-    src: './source/scripts/**/*.js'
+    src: './source/scripts/src/**/*.js',
+    dest: './source/scripts/'
   },
   images: {
     src: './source/images/**/*{.png,.jpg,.jpeg,.svg,.gif}',
@@ -45,7 +42,7 @@ const settings = {
 
 const { html, styles, scripts, images, build } = settings
 
-// Pug task
+// Pug task: You can disable this if you dont want to use it
 gulp.task('html', function () {
   return gulp.src('./source/pugs/**/*.pug')
     .pipe(pug({
@@ -55,7 +52,7 @@ gulp.task('html', function () {
     .pipe(gulp.dest(html.dest))
 })
 
-// Sass task
+// Styles task
 gulp.task('styles', function () {
   let onError = function (err) {
     notify.onError({
@@ -71,29 +68,14 @@ gulp.task('styles', function () {
     .pipe(plumber({errorHandler: onError}))
     .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-    .pipe(autoprefixer('last 10 version'))
+    .pipe(autoprefixer('last 2 version'))
     .pipe(sourcemaps.write(''))
     .pipe(plumber.stop())
     .pipe(gulp.dest(styles.dest))
     .pipe(notify({ message: 'TASK: "Styles" Completed!\n No error found.', onLast: true }))
     .pipe(browserSync.stream())
 })
-
-// BrowserSync task
-gulp.task('serve', ['styles'], function () {
-  browserSync.init({
-    server: {
-      baseDir: './app'
-    }
-  })
-
-  // Files to watch
-  gulp.watch(sassPath, ['styles'])
-  gulp.watch(htmlPath).on('change', reload)
-  gulp.watch(jsPath).on('change', reload)
-})
-
-// Move image to dist
+// Images task : only for build purpose
 gulp.task('images', function () {
   return gulp.src(images.src)
     .pipe(imagemin([
@@ -108,6 +90,32 @@ gulp.task('images', function () {
     ]))
     .pipe(gulp.dest(images.dest))
     .pipe(notify({ message: 'TASK: "IMAGES" Completed!\n No error found.', onLast: true }))
+})
+
+// Scripts Task
+gulp.task('scripts', function () {
+  gulp.src(scripts.src)
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(concat('bundle.js'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(scripts.dest))
+})
+
+// BrowserSync task
+gulp.task('serve', ['scripts', 'styles'], function () {
+  browserSync.init({
+    server: {
+      baseDir: './source'
+    }
+  })
+
+  // Files to watch
+  gulp.watch(sassPath, ['styles'])
+  gulp.watch(htmlPath).on('change', reload)
+  gulp.watch(jsPath).on('change', reload)
 })
 
 // Build task
