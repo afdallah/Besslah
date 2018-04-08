@@ -14,7 +14,6 @@ import imageminPngquant from 'imagemin-pngquant'
 import browserSync from 'browser-sync'
 import gulpIf from 'gulp-if'
 import useref from 'gulp-useref'
-import uncss from 'gulp-uncss'
 import surge from 'gulp-surge'
 import notify from 'gulp-notify'
 import del from 'del'
@@ -32,8 +31,7 @@ const project = {
   email: pkg.email,
   sourceDir: './source',
   buildDir: './build',
-  useUncss: false,
-  usePug: false
+  usePug: true
 }
 
 const paths = {
@@ -70,12 +68,16 @@ const { html, styles, scripts, images, build } = paths
 
 // Pug task: You can disable this if you dont want to use it
 gulp.task('html', function () {
-  return gulp.src(html.src)
-    .pipe(pug({
-      pretty: true
-    }))
-    // TODO: find a way to exclude parent directory
-    .pipe(gulp.dest(html.dest))
+  if (project.usePug) {
+    return gulp.src(html.src)
+      .pipe(pug({
+        pretty: true
+      }))
+      // TODO: find a way to exclude parent directory
+      .pipe(gulp.dest(html.dest))
+  }
+
+  return true
 })
 
 // Styles task
