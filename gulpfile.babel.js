@@ -18,20 +18,20 @@ import surge from 'gulp-surge'
 import notify from 'gulp-notify'
 import del from 'del'
 import gulpSequence from 'gulp-sequence'
-import pkg from './package.json'
+import settings from './settings.js'
 
 const { reload } = browserSync
 
 const project = {
-  name: 'Besslah Front-end',
-  homepage: 'mysuperawesomesite.surge.sh', // this url will be used for deploying to surge.sh
-  version: pkg.version,
-  license: pkg.license,
-  author: pkg.author,
-  email: pkg.email,
-  sourceDir: './source',
-  buildDir: './build',
-  usePug: true
+  name: settings.name || 'Edit project name in settings.js',
+  homepage: settings.homepage || 'edit-settings-js-to-change-this.surge.sh', // this url will be used for deploying to surge.sh
+  version: settings.version || '1.0.0',
+  license: settings.license || 'GPL',
+  author: settings.author || 'Edit author name in settings.js',
+  email: settings.email || '<admin@site.com>',
+  sourceDir: settings.sourceDir || './source',
+  buildDir: settings.buildDir || './build',
+  usePug: settings.usePug || true
 }
 
 const paths = {
