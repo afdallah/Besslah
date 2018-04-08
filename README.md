@@ -1,4 +1,4 @@
-# Besslah - Front-end workflow made easy ☕
+# 🚀Besslah - Front-end workflow made easy
 ✨ Besslah is just another way to say **'Just start now!'** in Javanese 🇮🇩. This series of gulp task script specifically designed for you to speed up your workflow. It comes with robust feature like *Sass support*, *Live reload*, *Autoprefixer*, *Uglify*, *Build*, *Deploy* and many more.
 
 ## Features
