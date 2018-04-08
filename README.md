@@ -12,6 +12,7 @@
 8. Integrated With bulma
 9. Support es6/es2015 syntax via babel
 8. Deploy to surge.sh
+9. Standardjs eslint
 
 ## Structures
 ```bash
