@@ -19,44 +19,67 @@ import surge from 'gulp-surge'
 import notify from 'gulp-notify'
 import del from 'del'
 import gulpSequence from 'gulp-sequence'
+import pkg from './package.json'
 
 const { reload } = browserSync
 
+const project = {
+  name: 'Besslah Front-end',
+  homepage: 'something.surge.sh', // this url will be used for deploying to surge.sh
+  version: pkg.version,
+  license: pkg.license,
+  author: pkg.author,
+  email: pkg.email,
+  sourceDir: './source',
+  buildDir: './build',
+  useUncss: false,
+  usePug: false
+}
+
 const paths = {
   html: {
-    src: './source/pugs/**/*.pug',
-    dest: './source'
+    src: `${project.sourceDir}/pugs/**/*.pug`,
+    dest: `${project.sourceDir}`
   },
   styles: {
-    src: './source/scss/**/*.scss',
-    dest: './source/styles'
+    src: `${project.sourceDir}/scss/**/*.scss`,
+    dest: `${project.sourceDir}/styles`
   },
   scripts: {
-    src: './source/scripts/src/**/*.js',
-    dest: './source/scripts/'
+    src: `${project.sourceDir}/scripts/src/**/*.js`,
+    dest: `${project.sourceDir}/scripts/`
   },
   images: {
-    src: './source/images/**/*{.png,.jpg,.jpeg,.svg,.gif}',
-    dest: './build/images'
+    src: `${project.sourceDir}/images/**/*{.png,.jpg,.jpeg,.svg,.gif}`,
+    dest: `${project.buildDir}/images`
   },
   build: {
     src: [
-      './source/*.html',
-      './source/styles',
-      './source/scripts',
-      '!source/scripts/src',
-      '!source/**/*.map',
-      './source/images/*'
+      `${project.sourceDir}/*.html`,
+      `${project.sourceDir}/styles`,
+      `${project.sourceDir}/scripts`,
+      `!${project.sourceDir}/scripts/src`,
+      `!${project.sourceDir}/**/*.map`,
+      `${project.sourceDir}/images/*`
     ],
-    dest: './build'
+    dest: project.buildDir
   }
 }
+
+const placeholder = '/*\n' +
+    ' * <%= pkg.name %> <%= pkg.version %>\n' +
+    ' * <%= pkg.description %>\n' +
+    ' * <%= pkg.homepage %>\n' +
+    ' *\n' +
+    ' * Copyright 2015, <%= pkg.author %>\n' +
+    ' * Released under the <%= pkg.license %> license.\n' +
+    '*/\n\n'
 
 const { html, styles, scripts, images, build } = paths
 
 // Pug task: You can disable this if you dont want to use it
 gulp.task('html', function () {
-  return gulp.src('./source/pugs/**/*.pug')
+  return gulp.src(html.src)
     .pipe(pug({
       pretty: true
     }))
@@ -84,9 +107,10 @@ gulp.task('styles', function () {
     .pipe(sourcemaps.write(''))
     .pipe(plumber.stop())
     .pipe(gulp.dest(styles.dest))
-    .pipe(notify({ message: 'TASK: "Styles" Completed!\n No error found.', onLast: true }))
+    // .pipe(notify({ message: 'TASK: "Styles" Completed!', onLast: true }))
     .pipe(browserSync.stream())
 })
+
 // Images task : only for build purpose
 gulp.task('images', function () {
   return gulp.src(images.src)
@@ -101,7 +125,7 @@ gulp.task('images', function () {
       imagemin.svgo({plugins: [{removeViewBox: false}]})
     ]))
     .pipe(gulp.dest(images.dest))
-    .pipe(notify({ message: 'TASK: "IMAGES" Completed!\n No error found.', onLast: true }))
+    .pipe(notify({ message: 'TASK: "IMAGES" Completed!', onLast: true }))
 })
 
 // Scripts Task
@@ -122,7 +146,7 @@ gulp.task('serve', ['scripts', 'styles'], function () {
     logPrefix: 'BESS',
     port: 3000,
     server: {
-      baseDir: './source'
+      baseDir: project.sourceDir
     }
   })
 
@@ -134,15 +158,15 @@ gulp.task('serve', ['scripts', 'styles'], function () {
 })
 
 gulp.task('copy', function () {
-  gulp.src(build.src, {base: './source'})
+  gulp.src(build.src, {base: project.sourceDir})
     .pipe(gulp.dest(build.dest))
 })
 
-gulp.task('clean', () => del(['build', '!.git', '!build/.git'], {dot: true}))
+gulp.task('clean', () => del([project.buildDir, '!.git', `!${project.buildDir}/.git`], {dot: true}))
 
 // Useref task : only used for build purpose
 gulp.task('useref', function () {
-  return gulp.src('./source/*.html')
+  return gulp.src(`${project.sourceDir}/*.html`)
     .pipe(useref())
     .pipe(gulpIf('*.css', minify({
       discardComments: {
@@ -150,8 +174,8 @@ gulp.task('useref', function () {
       }
     })))
     .pipe(gulpIf('*.js', uglify()))
-    .pipe(gulp.dest('./build'))
-    .pipe(notify({ message: 'TASK: "BUILD" Completed!\n No error found.', onLast: true }))
+    .pipe(gulp.dest(build.dest))
+    .pipe(notify({ message: 'TASK: "BUILD" Completed!', onLast: true }))
 })
 
 // Build
@@ -161,7 +185,7 @@ gulp.task('build', gulpSequence('html', 'styles', 'scripts', 'images', 'clean', 
 // Deploy trough surge
 gulp.task('deploy', ['build'], function () {
   return surge({
-    project: './build', // Path to your static build directory
-    domain: 'nusathemes.surge.sh' // Your domain or Surge subdomain
+    project: build.dest, // Path to your static build directory
+    domain: project.homepage // Your domain or Surge subdomain
   })
 })
