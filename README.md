@@ -1,5 +1,5 @@
 # Besslah - Front-end workflow made easy ☕
-✨ Besslah is just another way to say 'Just start now!' in javanese. This series of gulp task workflow designed for you to speedup your workflow. It comes with robust feature like Sass support, Live reload, Autoprefixer, Uglify, Build, Deploy and many more.
+✨ Besslah is just another way to say **'Just start now!'** in javanese 🇮🇩. This series of gulp task workflow designed for you to speedup your workflow. It comes with robust feature like *Sass support*, *Live reload*, *Autoprefixer*, *Uglify*, *Build*, *Deploy* and many more.
 
 ### Features
 1. **Compile Sass**
@@ -24,4 +24,4 @@
 8. `gulp` - run `gulp serve` task.
 
 
-Feel free to make a change. If you have any question, reach me on afdallah.war@gmail.com
+Feel free to make a change. If you have any question, reach me on afdallah.war@gmail.com ☕
