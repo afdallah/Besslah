@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Web starter kit for kids - Perfect configuration for your bootstrap and SASS workflow.",
   "main": "gulpfile.babel.js",
-  "dependencies": {},
+  "dependencies": {
+    "npm": "^5.8.0"
+  },
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",
