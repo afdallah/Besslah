@@ -35,7 +35,7 @@
 ```
 
 ## Quick Setup
-1. Clone this repo `git@github.com:afdallah/Besslah.git your-project-name`
+1. Clone this repo `git clone git@github.com:afdallah/Besslah.git your-project-name`
 2. Or Download it manually
 2. Install all dependencies `npm i -g gulp && npm i`
 3. Update `settings.js` to match your preferences
