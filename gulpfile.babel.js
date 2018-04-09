@@ -15,6 +15,7 @@ import browserSync from 'browser-sync'
 import gulpIf from 'gulp-if'
 import useref from 'gulp-useref'
 import surge from 'gulp-surge'
+import ghPages from 'gulp-gh-pages'
 import notify from 'gulp-notify'
 import del from 'del'
 import gulpSequence from 'gulp-sequence'
@@ -185,6 +186,11 @@ gulp.task('surge', function () {
     project: project.buildDir, // Path to your static build directory
     domain: project.homepage // Your domain or Surge subdomain
   })
+})
+
+gulp.task('gh-pages', function () {
+  return gulp.src('./build/**/*')
+    .pipe(ghPages())
 })
 
 // Build and deploy
